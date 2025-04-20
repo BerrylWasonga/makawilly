@@ -1,55 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import './joshu.css'; // Add any necessary styles
+import React, { useState, useEffect, useRef } from 'react';
+import './joshu.css';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navRef = useRef(null);
+  const toggleButtonRef = useRef(null);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(prev => !prev);
+  };
 
   useEffect(() => {
-    const toggleButton = document.querySelector('.mobile-toggle');
-    const navMenu = document.querySelector('.navv');
-
-    // Function to toggle menu
-    const toggleMenu = () => {
-      setIsMenuOpen((prevState) => !prevState);
-    };
-
-    toggleButton.addEventListener('click', toggleMenu);
-
-    // Close menu when clicking on links
-    const navLinks = document.querySelectorAll('.navv a');
-    navLinks.forEach((link) => {
-      link.addEventListener('click', () => {
-        if (window.innerWidth <= 768) {
-          setIsMenuOpen(false);
-        }
-      });
-    });
-
-    // Close menu when clicking outside
     const handleOutsideClick = (event) => {
       if (window.innerWidth > 768) return;
-
-      const isClickInside = navMenu.contains(event.target) || toggleButton.contains(event.target);
-
-      if (!isClickInside && navMenu.getAttribute('data-visible') === 'true') {
-        toggleMenu();
+      
+      if (navRef.current && toggleButtonRef.current && 
+          !navRef.current.contains(event.target) && 
+          !toggleButtonRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
       }
     };
 
-    document.addEventListener('click', handleOutsideClick);
-
-    // Close menu when resizing to desktop
     const handleResize = () => {
       if (window.innerWidth > 768 && isMenuOpen) {
         setIsMenuOpen(false);
       }
     };
 
+    document.addEventListener('click', handleOutsideClick);
     window.addEventListener('resize', handleResize);
 
-    // Cleanup event listeners
     return () => {
-      toggleButton.removeEventListener('click', toggleMenu);
       document.removeEventListener('click', handleOutsideClick);
       window.removeEventListener('resize', handleResize);
     };
@@ -62,23 +43,26 @@ const Header = () => {
           <h1>JoshuHub</h1>
         </div>
 
-        {/* Mobile Toggle Button */}
         <button
+          ref={toggleButtonRef}
           className="mobile-toggle"
+          onClick={toggleMenu}
           aria-label="Toggle navigation menu"
-          aria-expanded={isMenuOpen ? 'true' : 'false'}
+          aria-expanded={isMenuOpen}
         >
           <span className="hamburger"></span>
         </button>
 
-        {/* Navigation Menu */}
-        <nav>
-          <ul className={`navv ${isMenuOpen ? 'open' : ''}`} data-visible={isMenuOpen ? 'true' : 'false'}>
-            <li><a href="joshu.html">Home</a></li>
-            <li><a href="services.html">Services</a></li>
-            <li><a href="projects.html">Projects</a></li>
-            <li><a href="contact.html">Contact</a></li>
-            <li><a href="about.html">About</a></li>
+        <nav ref={navRef}>
+          <ul 
+            className={`navv ${isMenuOpen ? 'open' : ''}`} 
+            data-visible={isMenuOpen}
+          >
+            <li><a href="joshu.html" onClick={() => window.innerWidth <= 768 && setIsMenuOpen(false)}>Home</a></li>
+            <li><a href="services.html" onClick={() => window.innerWidth <= 768 && setIsMenuOpen(false)}>Services</a></li>
+            <li><a href="projects.html" onClick={() => window.innerWidth <= 768 && setIsMenuOpen(false)}>Projects</a></li>
+            <li><a href="contact.html" onClick={() => window.innerWidth <= 768 && setIsMenuOpen(false)}>Contact</a></li>
+            <li><a href="about.html" onClick={() => window.innerWidth <= 768 && setIsMenuOpen(false)}>About</a></li>
           </ul>
         </nav>
       </div>
