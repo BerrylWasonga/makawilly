@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import './joshu.css';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navRef = useRef(null);
   const toggleButtonRef = useRef(null);
+  const location = useLocation();
+
+  // Close menu when route changes
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
 
   const toggleMenu = () => {
     setIsMenuOpen(prev => !prev);
-  };
-
-  const closeMenu = () => {
-    if (window.innerWidth <= 768) {
-      setIsMenuOpen(false);
-    }
   };
 
   useEffect(() => {
@@ -47,7 +47,7 @@ const Header = () => {
     <header>
       <div className="container">
         <div className="webname">
-          <Link to="/" onClick={closeMenu}>
+          <Link to="/">
             <h1>JoshuHub</h1>
           </Link>
         </div>
@@ -63,15 +63,12 @@ const Header = () => {
         </button>
 
         <nav ref={navRef}>
-          <ul 
-            className={`navv ${isMenuOpen ? 'open' : ''}`} 
-            data-visible={isMenuOpen}
-          >
-            <li><Link to="/" onClick={closeMenu}>Home</Link></li>
-            <li><Link to="/services" onClick={closeMenu}>Services</Link></li>
-            <li><Link to="/projects" onClick={closeMenu}>Projects</Link></li>
-            <li><Link to="/contact" onClick={closeMenu}>Contact</Link></li>
-            <li><Link to="/about" onClick={closeMenu}>About</Link></li>
+          <ul className={`navv ${isMenuOpen ? 'open' : ''}`}>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/services">Services</Link></li>
+            <li><Link to="/projects">Projects</Link></li>
+            <li><Link to="/contact">Contact</Link></li>
+            <li><Link to="/about">About</Link></li>
           </ul>
         </nav>
       </div>
