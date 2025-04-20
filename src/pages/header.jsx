@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import './joshu.css';
 
 const Header = () => {
@@ -8,6 +9,12 @@ const Header = () => {
 
   const toggleMenu = () => {
     setIsMenuOpen(prev => !prev);
+  };
+
+  const closeMenu = () => {
+    if (window.innerWidth <= 768) {
+      setIsMenuOpen(false);
+    }
   };
 
   useEffect(() => {
@@ -40,7 +47,9 @@ const Header = () => {
     <header>
       <div className="container">
         <div className="webname">
-          <h1>JoshuHub</h1>
+          <Link to="/" onClick={closeMenu}>
+            <h1>JoshuHub</h1>
+          </Link>
         </div>
 
         <button
@@ -58,11 +67,11 @@ const Header = () => {
             className={`navv ${isMenuOpen ? 'open' : ''}`} 
             data-visible={isMenuOpen}
           >
-            <li><a href="joshu.html" onClick={() => window.innerWidth <= 768 && setIsMenuOpen(false)}>Home</a></li>
-            <li><a href="services.html" onClick={() => window.innerWidth <= 768 && setIsMenuOpen(false)}>Services</a></li>
-            <li><a href="projects.html" onClick={() => window.innerWidth <= 768 && setIsMenuOpen(false)}>Projects</a></li>
-            <li><a href="contact.html" onClick={() => window.innerWidth <= 768 && setIsMenuOpen(false)}>Contact</a></li>
-            <li><a href="about.html" onClick={() => window.innerWidth <= 768 && setIsMenuOpen(false)}>About</a></li>
+            <li><Link to="/" onClick={closeMenu}>Home</Link></li>
+            <li><Link to="/services" onClick={closeMenu}>Services</Link></li>
+            <li><Link to="/projects" onClick={closeMenu}>Projects</Link></li>
+            <li><Link to="/contact" onClick={closeMenu}>Contact</Link></li>
+            <li><Link to="/about" onClick={closeMenu}>About</Link></li>
           </ul>
         </nav>
       </div>
